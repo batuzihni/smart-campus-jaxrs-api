@@ -63,17 +63,21 @@ This API manages:
 ⸻
 
 🏗️ Project Structure
-
 smart-campus-api/
 ├── pom.xml
-├── src/main/java/com/batuhan/smartcampus/
-│   ├── config/
-│   ├── model/
-│   ├── resource/
-│   ├── exception/
-│   ├── store/
-│   └── filter/
-├── src/main/webapp/WEB-INF/web.xml
+├── src/
+│   └── main/
+│       ├── java/
+│       │   └── com/batuhan/smartcampus/
+│       │       ├── config/
+│       │       ├── model/
+│       │       ├── resource/
+│       │       ├── exception/
+│       │       ├── store/
+│       │       └── filter/
+│       └── webapp/
+│           └── WEB-INF/
+│               └── web.xml
 └── README.md
 
 ⸻
