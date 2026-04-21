@@ -1,71 +1,77 @@
-🚀 Smart Campus Sensor & Room Management API
+# 🚀 Smart Campus Sensor & Room Management API
 
-A RESTful Smart Campus API built using JAX-RS (Jersey) and Maven, designed for the 5COSC022W Client-Server Architectures coursework.
+A RESTful Smart Campus API built using **JAX-RS (Jersey)** and **Maven**, developed for the **5COSC022W Client-Server Architectures coursework**.
 
-⸻
+---
 
-🔗 Repository
+## 🔗 Repository
 
-GitHub:
+GitHub:  
 https://github.com/batuzihni/smart-campus-jaxrs-api
 
-⸻
+---
 
-🎥 Video Demonstration
+## 🎥 Video Demonstration
 
-YouTube Link:
-👉 (Add your video link here)
+YouTube Link:  
+👉 *Add your video link here*
 
-⸻
+---
 
-🧪 API Testing (Postman)
+## 🧪 API Testing (Postman)
 
-(Optional: Add screenshot if needed)
+Postman was used to test all main endpoints, including both successful and failure scenarios.
+
+> Optional: add a screenshot in an `images` folder and reference it below.
+
+```text
 images/postman.png
+```
 
-⸻
+---
 
-💾 Data Storage
+## 💾 Data Storage
 
-This project uses an in-memory data store implemented with:
+This project uses an **in-memory data store** implemented with thread-safe collections such as `ConcurrentHashMap`.
 
-* ConcurrentHashMap
-* Thread-safe collections
+### Key characteristics
+- No external database required
+- Safe concurrent access
+- Lightweight and simple for coursework deployment
 
-✔ No database required
-✔ Safe concurrent access
-✔ Fast and lightweight
+---
 
-⸻
+## 📌 API Overview
 
-📌 API Overview
+This API manages three core resource types:
 
-This API manages:
+- 🏫 **Rooms** — physical campus spaces
+- 📡 **Sensors** — smart devices installed inside rooms
+- 📊 **Sensor Readings** — historical measurements recorded by sensors
 
-* 🏫 Rooms – Physical campus spaces
-* 📡 Sensors – Devices inside rooms
-* 📊 Sensor Readings – Historical measurements
+---
 
-⸻
+## 🌐 Base Path
 
-🌐 Base Path
-
+```text
 /api/v1
+```
 
-⸻
+---
 
 ## 📁 Core Endpoints
 
-```bash
+```text
 /api/v1/rooms
 /api/v1/sensors
 /api/v1/sensors/{sensorId}/readings
 ```
-⸻
+
+---
 
 ## 📂 Project Structure
 
-```bash
+```text
 smart-campus-api/
 ├── pom.xml
 ├── src/
@@ -84,11 +90,12 @@ smart-campus-api/
 └── README.md
 ```
 
-⸻
+---
 
 ## 📊 Data Models
 
 ### Room
+
 ```java
 public class Room {
     private String id;
@@ -99,6 +106,7 @@ public class Room {
 ```
 
 ### Sensor
+
 ```java
 public class Sensor {
     private String id;
@@ -110,6 +118,7 @@ public class Sensor {
 ```
 
 ### SensorReading
+
 ```java
 public class SensorReading {
     private String id;
@@ -118,223 +127,285 @@ public class SensorReading {
 }
 ```
 
+---
 
-⸻
+## ⚙️ Build & Run
 
-⚙️ Build & Run
+### Requirements
 
-Requirements
+- Java 8+
+- Maven 3.8+
+- Apache Tomcat 9
+- Postman or `curl` for testing
 
-* Java 8+
-* Maven 3.8+
-* Apache Tomcat 9
+### Build
 
-⸻
-
-Build
-
+```bash
 mvn clean package
+```
 
-⸻
+### Run on Tomcat
 
-Run (Tomcat)
+Deploy the generated WAR file to Apache Tomcat, then access:
 
-Deploy WAR file to Tomcat:
-
+```text
 http://localhost:8080/smart-campus/api/v1
+```
 
-⸻
+---
 
-🧠 API Design
+## 🧠 API Design
 
-🔍 Discovery Endpoint
+### 🔍 Discovery Endpoint
 
+```http
 GET /api/v1
+```
 
-Returns API metadata and navigation links.
+Returns API metadata and navigational links.
 
-⸻
+---
 
-🏫 Rooms
+### 🏫 Rooms
 
-* GET /rooms
-* POST /rooms → 201 Created
-* GET /rooms/{id}
-* DELETE /rooms/{id} → 204 / 409
+#### Endpoints
 
-⸻
+- `GET /api/v1/rooms`
+- `POST /api/v1/rooms`
+- `GET /api/v1/rooms/{id}`
+- `DELETE /api/v1/rooms/{id}`
 
-📡 Sensors
+#### Behaviour
 
-* GET /sensors
-* GET /sensors?type=CO2
-* POST /sensors
+- `POST /rooms` returns **201 Created**
+- `DELETE /rooms/{id}` returns:
+  - **204 No Content** on success
+  - **409 Conflict** if the room still has assigned sensors
 
-✔ Validates roomId
-✔ Updates parent room automatically
+---
 
-⸻
+### 📡 Sensors
 
-📊 Sensor Readings (Sub-resource)
+#### Endpoints
 
-/sensors/{sensorId}/readings
+- `GET /api/v1/sensors`
+- `GET /api/v1/sensors?type=CO2`
+- `POST /api/v1/sensors`
 
-* GET
-* POST
+#### Behaviour
 
-✔ Updates sensor currentValue
-✔ Enforces business rules
+- Validates that `roomId` exists before creating a sensor
+- Adds the created sensor to the parent room automatically
+- Supports filtering by sensor type via query parameter
 
-⸻
+---
 
-⚠️ Error Handling
+### 📊 Sensor Readings (Sub-resource)
 
-All errors return structured JSON:
+```text
+/api/v1/sensors/{sensorId}/readings
+```
 
+#### Endpoints
+
+- `GET /api/v1/sensors/{sensorId}/readings`
+- `POST /api/v1/sensors/{sensorId}/readings`
+
+#### Behaviour
+
+- Stores historical readings for a given sensor
+- Updates the parent sensor’s `currentValue` after a successful POST
+- Enforces business rules such as maintenance-mode restrictions
+
+---
+
+## ⚠️ Error Handling
+
+All errors are returned as structured JSON rather than raw stack traces or HTML error pages.
+
+### Example Error Response
+
+```json
 {
   "timestamp": 1713600000000,
   "status": 409,
   "error": "Conflict",
-  "message": "Room cannot be deleted",
+  "message": "Room cannot be deleted because it still has assigned sensors.",
   "path": "/api/v1/rooms/LIB-301"
 }
+```
 
-⸻
+### Custom Exceptions
 
-Custom Exceptions
+| Exception | HTTP Status |
+|---|---:|
+| `RoomNotEmptyException` | 409 |
+| `LinkedResourceNotFoundException` | 422 |
+| `SensorUnavailableException` | 403 |
+| `ResourceNotFoundException` | 404 |
+| `GlobalExceptionMapper` | 500 |
 
-Exception	Status
-RoomNotEmptyException	409
-LinkedResourceNotFoundException	422
-SensorUnavailableException	403
-ResourceNotFoundException	404
-GlobalExceptionMapper	500
+---
 
-⸻
+## 📈 Logging / Observability
 
-📈 Logging / Observability
+A custom JAX-RS filter is used to log:
 
-Custom JAX-RS filter logs:
+- HTTP method
+- Request URI
+- Final response status code
 
-* HTTP Method
-* Request URI
-* Response Status
+### Example Log Output
 
-Example:
+```text
+--- Incoming Request ---
+Method: POST
+URI: http://localhost:8080/smart-campus/api/v1/sensors
 
-Incoming: POST /sensors
-Outgoing: 201
+--- Outgoing Response ---
+Status: 201
+```
 
-⸻
+---
 
-🔧 Sample cURL Commands
+## 🔧 Sample cURL Commands
 
-Create Room
+### Create a Room
 
+```bash
 curl -X POST http://localhost:8080/smart-campus/api/v1/rooms \
--H "Content-Type: application/json" \
--d '{"id":"LIB-301","name":"Library","capacity":40}'
+  -H "Content-Type: application/json" \
+  -d '{
+    "id":"LIB-301",
+    "name":"Library Quiet Study",
+    "capacity":40
+  }'
+```
 
-Get Rooms
+### Get All Rooms
 
+```bash
 curl http://localhost:8080/smart-campus/api/v1/rooms
+```
 
-Create Sensor
+### Create a Sensor
 
+```bash
 curl -X POST http://localhost:8080/smart-campus/api/v1/sensors \
--H "Content-Type: application/json" \
--d '{"id":"CO2-001","type":"CO2","status":"ACTIVE","currentValue":400,"roomId":"LIB-301"}'
+  -H "Content-Type: application/json" \
+  -d '{
+    "id":"CO2-001",
+    "type":"CO2",
+    "status":"ACTIVE",
+    "currentValue":400,
+    "roomId":"LIB-301"
+  }'
+```
 
-⸻
+### Filter Sensors by Type
 
-🧠 Conceptual Answers
+```bash
+curl "http://localhost:8080/smart-campus/api/v1/sensors?type=CO2"
+```
 
-JAX-RS Lifecycle
+### Add a Reading
 
-Resources are request-scoped, reducing shared-state issues.
+```bash
+curl -X POST http://localhost:8080/smart-campus/api/v1/sensors/CO2-001/readings \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id":"reading-001",
+    "timestamp":1713600000000,
+    "value":431.8
+  }'
+```
 
-⸻
+---
 
-HATEOAS
+## 🧠 Conceptual Answers
 
-Improves API discoverability and reduces client coupling.
+### JAX-RS Lifecycle
 
-⸻
+JAX-RS resources are typically request-scoped, meaning a new resource instance is created per request. This reduces accidental shared-state problems, but shared in-memory collections must still be managed carefully to avoid race conditions.
 
-DELETE Idempotency
+### HATEOAS
 
-DELETE is idempotent because repeated calls do not change final state.
+Hypermedia improves discoverability by allowing the API to expose available links and next actions directly in responses, reducing client-side hardcoding and tight coupling.
 
-⸻
+### DELETE Idempotency
 
-Query Parameters
+DELETE is idempotent because sending the same DELETE request multiple times should leave the server in the same final state, even if later responses differ.
 
-Better for filtering:
+### Query Parameters for Filtering
 
+Using query parameters such as:
+
+```text
 /sensors?type=CO2
+```
 
-⸻
+is preferable because it keeps the URI focused on the same collection while applying filtering criteria cleanly.
 
-Sub-Resource Locator
+### Sub-Resource Locator Pattern
 
-Improves modularity and scalability.
+Using a dedicated sub-resource for readings improves modularity, readability, and maintainability by separating sensor logic from sensor-reading logic.
 
-⸻
+### HTTP 422 vs 404
 
-HTTP 422 vs 404
+- **422 Unprocessable Entity** is appropriate when the request body is valid JSON but semantically invalid
+- **404 Not Found** is appropriate when the requested resource URI itself does not exist
 
-422 = semantic error in payload
-404 = endpoint not found
+### Security
 
-⸻
+Internal Java stack traces should never be exposed to clients because they reveal implementation details that may help attackers.
 
-Security
+### Filters vs Manual Logging
 
-Stack traces are hidden to prevent information leakage.
+Filters are better than manually placing log statements inside each method because they centralise cross-cutting concerns and keep resource methods focused on business logic.
 
-⸻
+---
 
-Filters vs Logging
+## 🏆 Distinction Checklist
 
-Filters centralize cross-cutting concerns like logging.
+- RESTful design principles applied
+- Correct and meaningful HTTP status codes
+- Sub-resource implementation for readings
+- Business rule validation
+- Structured JSON error handling
+- Logging filter for observability
+- Clean package organisation
+- Theoretical justification included in README
+- Demonstration includes both successful and failure scenarios
 
-⸻
+---
 
-🏆 Distinction Checklist
+## 🎬 Suggested Demo Flow
 
-✔ RESTful design
-✔ Correct HTTP status codes
-✔ Sub-resource implementation
-✔ Validation & business rules
-✔ Structured error handling
-✔ Logging filter
-✔ Clean architecture
-✔ Strong theoretical justification
+1. Show the discovery endpoint
+2. Create a room
+3. Retrieve the room
+4. Create a valid sensor
+5. Trigger a validation error with an invalid `roomId`
+6. Filter sensors by type
+7. Add a reading successfully
+8. Show reading history
+9. Show updated `currentValue`
+10. Trigger a `403 Forbidden` with a maintenance sensor
+11. Trigger a `409 Conflict` by deleting an occupied room
+12. Show request/response logs
 
-⸻
+---
 
-🎬 Suggested Demo Flow
-
-1. Discovery endpoint
-2. Create room
-3. Create sensor
-4. Validation error (422)
-5. Filter sensors
-6. Add reading
-7. Show updated value
-8. Trigger 403
-9. Trigger 409
-10. Show logs
-
-⸻
-
-📌 Final Notes
+## 📌 Final Notes
 
 This project demonstrates:
 
-* REST API design principles
-* Clean architecture
-* Error handling best practices
-* Real-world backend patterns
+- REST API design principles
+- Resource-oriented architecture
+- Nested resource design
+- Business rule enforcement
+- Structured exception mapping
+- Logging and observability
+- Clean separation of concerns
 
-⸻
+It was developed as a practical implementation of RESTful service design using JAX-RS and Maven for the Client-Server Architectures module.
