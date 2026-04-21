@@ -54,15 +54,18 @@ This API manages:
 
 ⸻
 
-📂 Core Endpoints
+## 📁 Core Endpoints
 
+```bash
 /api/v1/rooms
 /api/v1/sensors
 /api/v1/sensors/{sensorId}/readings
-
+```
 ⸻
 
-🏗️ Project Structure
+## 📂 Project Structure
+
+```bash
 smart-campus-api/
 ├── pom.xml
 ├── src/
@@ -79,22 +82,24 @@ smart-campus-api/
 │           └── WEB-INF/
 │               └── web.xml
 └── README.md
+```
 
 ⸻
 
-📊 Data Models
+## 📊 Data Models
 
-Room
-
+### Room
+```java
 public class Room {
     private String id;
     private String name;
     private int capacity;
     private List<String> sensorIds;
 }
+```
 
-Sensor
-
+### Sensor
+```java
 public class Sensor {
     private String id;
     private String type;
@@ -102,14 +107,17 @@ public class Sensor {
     private double currentValue;
     private String roomId;
 }
+```
 
-SensorReading
-
+### SensorReading
+```java
 public class SensorReading {
     private String id;
     private long timestamp;
     private double value;
 }
+```
+
 
 ⸻
 
