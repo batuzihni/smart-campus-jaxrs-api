@@ -4,17 +4,35 @@ A RESTful Smart Campus API built using **JAX-RS (Jersey)** and **Maven**, develo
 
 ---
 
-## 🔗 Repository
-
-GitHub:  
-https://github.com/batuzihni/smart-campus-jaxrs-api
-
----
-
 ## 🎥 Video Demonstration
 
 YouTube Link:  
 👉 https://youtu.be/yKF4yABHng8
+
+---
+
+## 1. Introduction
+
+## 2. System Architecture
+
+## 3. RESTful Design Principles
+
+## 4. API Endpoints
+
+## 5. Data Model
+
+## 6. Advanced Features
+
+## 7. Error Handling
+
+## 8. How to Run
+
+---
+
+## 🔗 Repository
+
+GitHub:  
+https://github.com/batuzihni/smart-campus-jaxrs-api
 
 ---
 
