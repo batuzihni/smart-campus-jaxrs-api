@@ -14,19 +14,7 @@ https://github.com/batuzihni/smart-campus-jaxrs-api
 ## 🎥 Video Demonstration
 
 YouTube Link:  
-👉 *Add your video link here*
-
----
-
-## 🧪 API Testing (Postman)
-
-Postman was used to test all main endpoints, including both successful and failure scenarios.
-
-> Optional: add a screenshot in an `images` folder and reference it below.
-
-```text
-images/postman.png
-```
+👉 https://youtu.be/yKF4yABHng8
 
 ---
 
